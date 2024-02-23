@@ -107,14 +107,14 @@ export default async function handler(req, res) {
   const seoResponseJson = JSON.parse(seoResponse.data?.choices[0]?.message?.content);
   const { title, metaDescription } = seoResponseJson;
 
-  console.log(userProfile._id, "userProfile._id")
+  console.log(userProfile.upsertedId, "userProfile._id")
 
   const newPost = await db.collection('posts').insertOne({
     postContent,
     title,
     metaDescription,
     keywords,
-    user: userProfile._id,
+    user: userProfile.upsertedId,
     createdAt: new Date()
   })
 
