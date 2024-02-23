@@ -20,6 +20,8 @@ export default async function handler(req, res) {
     }
   );
 
+  console.log(userProfile, "userProfile1")
+
   if (!userProfile || userProfile.availableTokens <= 0) {
     userProfile =  await db.collection('users').updateOne(
       {
@@ -38,6 +40,8 @@ export default async function handler(req, res) {
       }
     );
   }
+
+  console.log(userProfile, "userProfile2")
 
   const response = await api.createChatCompletion({
     model: 'gpt-3.5-turbo',
@@ -102,6 +106,8 @@ export default async function handler(req, res) {
 
   const seoResponseJson = JSON.parse(seoResponse.data?.choices[0]?.message?.content);
   const { title, metaDescription } = seoResponseJson;
+
+  console.log(userProfile._id, "userProfile._id")
 
   const newPost = await db.collection('posts').insertOne({
     postContent,

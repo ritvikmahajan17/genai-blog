@@ -72,8 +72,6 @@ export const getServerSideProps = withPageAuthRequired({
 
         const { user } = await getSession(context.req, context.res);
 
-        console.log(user,"user")
-
         const client = await clientPromise;
         const db = client.db("genaiBlog");
         const currUser = await db.collection('users').findOne(
