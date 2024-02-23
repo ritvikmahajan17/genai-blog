@@ -29,6 +29,10 @@ export default function NewPost() {
         const { postId } = data
         setLoading(false)
 
+        if(!postId){
+            return
+        }
+
         router.push(`/posts/${postId}`)
 
     }
@@ -68,6 +72,8 @@ export const getServerSideProps = withPageAuthRequired({
 
         const { user } = await getSession(context.req, context.res);
 
+        console.log(user,"user")
+
         const client = await clientPromise;
         const db = client.db("genaiBlog");
         const currUser = await db.collection('users').findOne(
@@ -76,10 +82,17 @@ export const getServerSideProps = withPageAuthRequired({
             }
         );
 
-        console.log(currUser,"currUser")
+        if(!currUser){
+            return {
+                props: {
+                    posts: [],
+                    availableTokens: 10
+                }
+            }
+        }
 
         const posts = await db.collection('posts').find({
-            user: new ObjectId(currUser._id)
+            user: new ObjectId(currUser?._id)
         })?.toArray();
 
 

@@ -14,14 +14,29 @@ export default async function handler(req, res) {
   const { user } = await getSession(req, res);
   const client = await clientPromise;
   const db = client.db("genaiBlog");
-  const userProfile = await db.collection('users').findOne(
+  let userProfile = await db.collection('users').findOne(
     {
       auth0Id: user.sub,
     }
   );
 
-  if (!userProfile || userProfile.availableTokens <=0) {
-    return res.status(403).json({ error: 'Not enough tokens' })
+  if (!userProfile || userProfile.availableTokens <= 0) {
+    userProfile =  await db.collection('users').updateOne(
+      {
+        auth0Id: user.sub,
+      },
+      {
+        $inc: {
+          availableTokens: 10
+        },
+        $setOnInsert: {
+          auth0Id: user.sub,
+        }
+      },
+      {
+        upsert: true
+      }
+    );
   }
 
   const response = await api.createChatCompletion({
@@ -97,5 +112,5 @@ export default async function handler(req, res) {
     createdAt: new Date()
   })
 
-  res.status(200).json({ postId: newPost.insertedId})
+  res.status(200).json({ postId: newPost.insertedId })
 }
