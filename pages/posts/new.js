@@ -75,14 +75,17 @@ export const getServerSideProps = withPageAuthRequired({
                 auth0Id: user.sub,
             }
         );
+
+        console.log(currUser,"currUser")
+
         const posts = await db.collection('posts').find({
             user: new ObjectId(currUser._id)
-        }).toArray();
+        })?.toArray();
 
         posts?.forEach(post => {
-            post._id = post?._id.toString()
-            post.user = post?.user.toString()
-            post.createdAt = post?.createdAt.toString()
+            post?._id = post?._id.toString()
+            post?.user = post?.user.toString()
+            post?.createdAt = post?.createdAt.toString()
         }
         )
 
