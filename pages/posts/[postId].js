@@ -73,13 +73,14 @@ export const getServerSideProps = withPageAuthRequired({
                 user: currUser._id
             },
         );
+            
 
         const allPosts = await db.collection('posts').find
             ({
                 user: currUser._id
             }).toArray();
 
-        allPosts.forEach(post => {
+        allPosts?.forEach(post => {
             post._id = post._id.toString()
             post.user = post.user.toString()
             post.createdAt = post.createdAt.toString()
@@ -88,10 +89,10 @@ export const getServerSideProps = withPageAuthRequired({
 
         return {
             props: {
-                postContent: post.postContent,
-                title: post.title,
-                metaDescription: post.metaDescription,
-                keywords: post.keywords || "",
+                postContent: post?.postContent,
+                title: post?.title,
+                metaDescription: post?.metaDescription,
+                keywords: post?.keywords || "",
                 posts: allPosts,
                 postId:postId,
                 availableTokens: currUser.availableTokens

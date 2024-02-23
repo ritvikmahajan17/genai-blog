@@ -79,7 +79,7 @@ export const getServerSideProps = withPageAuthRequired({
             user: new ObjectId(currUser._id)
         }).toArray();
 
-        posts.forEach(post => {
+        posts?.forEach(post => {
             post._id = post._id.toString()
             post.user = post.user.toString()
             post.createdAt = post.createdAt.toString()
