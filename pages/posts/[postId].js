@@ -11,7 +11,7 @@ import { faHashtag } from "@fortawesome/free-solid-svg-icons";
 export default function Post(props) {
 
     return (
-        <div className="flex overflow-scroll justify-center items-center px-3 py-2 ">
+        <div className="flex overflow-scroll justify-center items-center">
             <div className="h-screen w-1/2 flex flex-col gap-4">
                 <div>
                     <div className="bg-stone-200 h-10 pl-3 flex items-center rounded-sm font-bold">SEO title & Meta-Description</div>

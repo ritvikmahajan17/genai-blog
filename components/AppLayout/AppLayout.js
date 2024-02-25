@@ -9,7 +9,10 @@ export default function AppLayout({ children, ...rest }) {
     const currPostId = rest.postId;
     const {availableTokens} = rest;
 
-    const postList = rest.posts;
+    const postList = rest.posts.sort((a, b) => {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+    })
+    
     const router = useRouter();
 
     const handleAddTokens = async () => {
