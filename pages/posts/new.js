@@ -4,15 +4,34 @@ import { useState } from "react"
 import { useRouter } from "next/router"
 import clientPromise from "../../lib/mongodb"
 import { ObjectId } from "mongodb"
+import { CSSProperties } from "react";
+import {ScaleLoader} from "react-spinners"
+
 
 export default function NewPost() {
 
     const [topic, setTopic] = useState('')
     const [keywords, setKeywords] = useState('')
     const [loading, setLoading] = useState(false)
+    const [error, setError] = useState({
+        topic: false,
+        keywords: false
+
+    })
     const router = useRouter()
 
     const handleGeneratePost = async () => {
+
+
+        setError({
+            topic: !topic,
+            keywords: !keywords
+        })
+
+        if (!topic || !keywords) {
+            return
+        }
+
         setLoading(true)
         const res = await fetch('/api/generatePost', {
             method: 'POST',
@@ -29,7 +48,7 @@ export default function NewPost() {
         const { postId } = data
         setLoading(false)
 
-        if(!postId){
+        if (!postId) {
             return
         }
 
@@ -41,19 +60,18 @@ export default function NewPost() {
         <div className="bg-gray-200 p-5 flex flex-col gap-4 items-center w-96 rounded-md">
             <h1>Generate New Post</h1>
             <div className="flex flex-col">
-                <label htmlFor="title">Topic</label>
+                <label htmlFor="title"><span>Topic</span>{error.topic && <span className="text-red-500 ml-2 text-sm">Fill pls</span>}</label>
                 <input onChange={(e) => {
                     setTopic(e.target.value)
                 }} className="rounded-sm pl-1" name="title" type="text" placeholder="Title" value={topic} />
             </div>
             <div className="flex flex-col">
-                <label htmlFor="keywords">Keywords (comma seperated)</label>
+                <label htmlFor="keywords"><span>Keywords (comma seperated)</span>{error.keywords && <span className="text-red-500 ml-2 text-sm">Fill pls</span>}</label>
                 <input onChange={(e) => { setKeywords(e.target.value) }} className="rounded-sm pl-1" name="keywords" type="text" placeholder="Keywords" value={keywords} />
             </div>
-            <button className="h-10 bg-green-500 w-48 rounded" onClick={handleGeneratePost}>{
-                loading ? "Loading..." : "Generate Post"
-            }
-            </button>
+            <ScaleLoader color="#4A5568" loading={loading}  />
+            {!loading && <button className="h-10 bg-green-500 w-48 rounded" onClick={handleGeneratePost}>Generate Post
+            </button>}
         </div>
     )
 }
@@ -80,7 +98,7 @@ export const getServerSideProps = withPageAuthRequired({
             }
         );
 
-        if(!currUser){
+        if (!currUser) {
             return {
                 props: {
                     posts: [],
@@ -94,7 +112,7 @@ export const getServerSideProps = withPageAuthRequired({
         })?.toArray();
 
 
-        if(!posts){
+        if (!posts) {
             return {
                 props: {
                     posts: [],

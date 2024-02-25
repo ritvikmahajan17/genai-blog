@@ -73,7 +73,6 @@ export const getServerSideProps = withPageAuthRequired({
                 user: currUser._id
             },
         );
-            
 
         const allPosts = await db.collection('posts').find
             ({
@@ -89,9 +88,9 @@ export const getServerSideProps = withPageAuthRequired({
 
         return {
             props: {
-                postContent: post?.postContent,
-                title: post?.title,
-                metaDescription: post?.metaDescription,
+                postContent: post?.postContent || "",
+                title: post?.title|| "",
+                metaDescription: post?.metaDescription|| "",
                 keywords: post?.keywords || "",
                 posts: allPosts,
                 postId:postId,
